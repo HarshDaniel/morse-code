@@ -1,6 +1,5 @@
 console.log('Script loaded');
 
-
 const morseCode = {
     'A': '.-', 'B': '-...', 'C': '-.-.', 'D': '-..', 'E': '.', 'F': '..-.', 'G': '--.', 'H': '....',
     'I': '..', 'J': '.---', 'K': '-.-', 'L': '.-..', 'M': '--', 'N': '-.', 'O': '---', 'P': '.--.',
@@ -9,88 +8,88 @@ const morseCode = {
     '5': '.....', '6': '-....', '7': '--...', '8': '---..', '9': '----.', ' ': '/'
 };
 
-
-const dotDuration = 60; 
-const dashDuration = dotDuration * 3; 
-const spaceDuration = dotDuration * 3; 
-const charSpaceDuration = dotDuration; 
-
+const dotDuration = 60;
+const dashDuration = dotDuration * 3;
+const spaceDuration = dotDuration * 3;
+const charSpaceDuration = dotDuration;
 
 const audioContext = new (window.AudioContext || window.webkitAudioContext)();
 const oscillator = audioContext.createOscillator();
 const gainNode = audioContext.createGain();
 
 function convertToMorse() {
-    const text = document.querySelector('#inputText').value.toUpperCase();
-    
+    try {
+        const inputText = document.querySelector('#inputText').value.toUpperCase().trim();
 
-    let morseText = '';
-
-    for (let i = 0; i < text.length; i++) {
-        const char = text[i];
-
-        if (morseCode[char]) {
-            morseText += morseCode[char] + ' ';
+        if (!inputText) {
+            alert('Please enter text to convert to Morse code.');
         }
+
+        let morseText = '';
+        for (let i = 0; i < inputText.length; i++) {
+            const char = inputText[i];
+            if (morseCode[char]) {
+                morseText += morseCode[char] + ' ';
+            } else {
+                console.warn(`Character '${char}' is not supported in Morse code.`);
+            }
+        }
+        document.querySelector('#outputCode').value = morseText.trim();
+        console.log('Morse code:', morseText.trim());
+        beepFromMorse(morseText.trim());
+    } catch (error) {
+        console.error('Error in convertToMorse:', error.message);
     }
-
-    document.querySelector('#outputCode').value = morseText;
-
-    console.log(morseText);
-    beepFromMorse(morseText);
 }
 
 function beepFromMorse(morseText) {
-    
+    try {
+        const oscillator = audioContext.createOscillator();
+        const gainNode = audioContext.createGain();
 
-    
+        oscillator.type = 'sine';
+        oscillator.frequency.setValueAtTime(1000, audioContext.currentTime);
+        gainNode.connect(audioContext.destination);
+        oscillator.connect(gainNode);
+        oscillator.start();
 
-    oscillator.type = 'sine'; 
-    oscillator.frequency.setValueAtTime(1000, audioContext.currentTime); 
-    gainNode.connect(audioContext.destination); 
-    oscillator.connect(gainNode); 
+        let currentIndex = 0;
 
-    oscillator.start();
+        const playNextSignal = () => {
+            if (currentIndex >= morseText.length) {
+                setTimeout(() => {
+                    oscillator.stop();
+                }, charSpaceDuration);
+                return;
+            }
 
-    let currentIndex = 0;
+            const currentChar = morseText[currentIndex];
 
-    const playNextSignal = () => {
-        if (currentIndex >= morseText.length) {
-            setTimeout(() => {
-                oscillator.stop(); 
-            }, charSpaceDuration);
-            return;
-        }
-
-        const currentChar = morseText[currentIndex];
-
-        if (currentChar === '.') {
-            oscillator.frequency.setValueAtTime(1000, audioContext.currentTime);
-            gainNode.gain.setValueAtTime(1, audioContext.currentTime);
-            audioContext.resume();
-            setTimeout(() => {
-                gainNode.gain.setValueAtTime(0, audioContext.currentTime);
-                currentIndex++;
-                setTimeout(playNextSignal, charSpaceDuration);
-            }, dotDuration);
-        } else if (currentChar === '-') {
-            oscillator.frequency.setValueAtTime(1000, audioContext.currentTime);
-            gainNode.gain.setValueAtTime(1, audioContext.currentTime);
-            audioContext.resume();
-            setTimeout(() => {
-                gainNode.gain.setValueAtTime(0, audioContext.currentTime);
-                currentIndex++;
-                setTimeout(playNextSignal, charSpaceDuration);
-            }, dashDuration);
-        } else if (currentChar === ' ') {
-            setTimeout(() => {
-                currentIndex++;
-                playNextSignal();
-            }, spaceDuration);
-        } else {
-            currentIndex++;
-            playNextSignal();
-        }
-    };
-    playNextSignal();
+            switch (currentChar) {
+                case '.':
+                case '-':
+                    oscillator.frequency.setValueAtTime(1000, audioContext.currentTime);
+                    gainNode.gain.setValueAtTime(1, audioContext.currentTime);
+                    audioContext.resume();
+                    setTimeout(() => {
+                        gainNode.gain.setValueAtTime(0, audioContext.currentTime);
+                        currentIndex++;
+                        setTimeout(playNextSignal, charSpaceDuration);
+                    }, currentChar === '.' ? dotDuration : dashDuration);
+                    break;
+                case ' ':
+                    setTimeout(() => {
+                        currentIndex++;
+                        playNextSignal();
+                    }, spaceDuration);
+                    break;
+                default:
+                    currentIndex++;
+                    playNextSignal();
+            }
+        };
+        playNextSignal();
+    } catch (error) {
+        console.error('Error in beepFromMorse:', error.message);
+    }
 }

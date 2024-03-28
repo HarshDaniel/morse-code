@@ -17,9 +17,15 @@ const audioContext = new (window.AudioContext || window.webkitAudioContext)();
 const oscillator = audioContext.createOscillator();
 const gainNode = audioContext.createGain();
 
+$(document).ready(function() {
+    $('#convertToMorseButton').click(() => {
+        convertToMorse();
+    });
+});
+
 function convertToMorse() {
     try {
-        const inputText = document.querySelector('#inputText').value.toUpperCase().trim();
+        const inputText = $('#inputText').val().toUpperCase().trim();
 
         if (!inputText) {
             alert('Please enter text to convert to Morse code.');
@@ -34,13 +40,15 @@ function convertToMorse() {
                 console.warn(`Character '${char}' is not supported in Morse code.`);
             }
         }
-        document.querySelector('#outputCode').value = morseText.trim();
+        $('#outputCode').val(morseText.trim());
         console.log('Morse code:', morseText.trim());
         beepFromMorse(morseText.trim());
     } catch (error) {
         console.error('Error in convertToMorse:', error.message);
     }
 }
+
+
 
 function beepFromMorse(morseText) {
     try {
@@ -93,3 +101,6 @@ function beepFromMorse(morseText) {
         console.error('Error in beepFromMorse:', error.message);
     }
 }
+
+
+    

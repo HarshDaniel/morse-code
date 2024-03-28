@@ -31,9 +31,17 @@ button {
     margin-right: 10px;
 }
 
+.info {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+}
+
 button:hover {
     background-color: #0056b3;
 }
+
 
 body[data-theme="light"],
 body[data-theme="light"] textarea,

@@ -18,7 +18,7 @@ const oscillator = audioContext.createOscillator();
 const gainNode = audioContext.createGain();
 
 $(document).ready(function() {
-    $('body').attr('data-theme', 'light');
+    $('body').attr('data-theme', 'dark');
     $('#convertToMorseButton').click(() => {
         convertToMorse();
     });
@@ -55,11 +55,12 @@ function convertToMorse() {
 function toggleTheme() {
     const body = $('body');
     const currentTheme = body.attr('data-theme');
-    const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+    const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
     body.attr('data-theme', newTheme);
     $('#toggleTheme').text(newTheme === 'light' ? 'Dark Mode' : 'Light Mode');
     console.log('Theme toggled to:', newTheme);
 }
+
 
 function beepFromMorse(morseText) {
     try {

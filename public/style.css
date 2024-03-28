@@ -25,8 +25,6 @@ h1 {
 
 button {
     padding: 10px 20px;
-    background-color: #007bff;
-    color: white;
     border: none;
     cursor: pointer;
     margin-left: 10px;
@@ -35,4 +33,30 @@ button {
 
 button:hover {
     background-color: #0056b3;
+}
+
+body[data-theme="light"],
+body[data-theme="light"] textarea,
+body[data-theme="light"] button {
+    background-color: #ffffff;
+    color: #000000;
+}
+
+body[data-theme="dark"],
+body[data-theme="dark"] textarea,
+body[data-theme="dark"] button {
+    background-color: #333333;
+    color: #ffffff;
+}
+
+body[data-theme="light"] button {
+    background-color: #007bff;
+}
+
+body[data-theme="dark"] button {
+    background-color: #444444;
+}
+
+body, textarea, button {
+    transition: background-color 0.5s ease, color 0.5s ease;
 }

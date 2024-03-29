@@ -113,6 +113,3 @@ function beepFromMorse(morseText) {
         console.error('Error in beepFromMorse:', error.message);
     }
 }
-
-
-    

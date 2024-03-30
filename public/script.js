@@ -40,6 +40,27 @@ const morseCode = {
   " ": "/",
 };
 
+morseSpecialSymbols = {
+  ".": ".-.-.-",
+  ",": "--..--",
+  "?": "..--..",
+  "'": ".----.",
+  "!": "-.-.--",
+  "/": "-..-.",
+  "(": "-.--.",
+  ")": "-.--.-",
+  "&": ".-...",
+  ":": "---...",
+  ";": "-.-.-.",
+  "=": "-...-",
+  "+": ".-.-.",
+  "-": "-....-",
+  _: "..--.-",
+  '"': ".-..-.",
+  $: "...-..-",
+  "@": ".--.-.",
+};
+
 const dotDuration = 60;
 const dashDuration = dotDuration * 3;
 const spaceDuration = dotDuration * 3;
@@ -76,10 +97,15 @@ function convertToMorse() {
     let morseText = "";
     for (let i = 0; i < inputText.length; i++) {
       const char = inputText[i];
-      if (morseCode[char]) {
+      if (morseCode[char] !== undefined && morseCode[char] !== "") {
         morseText += morseCode[char] + " ";
+      } else if (morseSpecialSymbols[char] !== undefined && morseSpecialSymbols[char] !== "") {
+        morseText += morseSpecialSymbols[char] + " ";
+      } else if (char === " " || char === "\n" || char === "\r") {
+        morseText += "/ ";
       } else {
         console.warn(`Character '${char}' is not supported in Morse code.`);
+        morseText += char + " ";
       }
     }
     $("#outputCode").val(morseText.trim());

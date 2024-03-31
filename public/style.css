@@ -29,6 +29,15 @@ button {
     cursor: pointer;
     margin-left: 10px;
     margin-right: 10px;
+    margin-top: 10px;
+    font-size: 10px;
+}
+
+div {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
 }
 
 .info {

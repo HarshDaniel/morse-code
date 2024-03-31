@@ -84,6 +84,13 @@ $(document).ready(function () {
       e.preventDefault();
     }
   });
+  $("#beepFromMorseButton").click(() => {
+    const morseText = $("#outputCode").val().trim();
+    if (!morseText) {
+      alert("Please convert text to Morse code first.");
+    }
+    beepFromMorse(morseText);
+  });
 });
 
 function convertToMorse() {
@@ -110,7 +117,6 @@ function convertToMorse() {
     }
     $("#outputCode").val(morseText.trim());
     console.log("Morse code:", morseText.trim());
-    beepFromMorse(morseText.trim());
   } catch (error) {
     console.error("Error in convertToMorse:", error.message);
   }
